@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/floatingRoot"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#E61a1a2e"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="⚙ Configurações"
+            android:textColor="#e94560"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/btnClosePanel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="✕"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <!-- Stats em tempo real -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/textFps"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="FPS: --"
+            android:textColor="#0f0"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/textRam"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RAM: --"
+            android:textColor="#0ff"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/textTemp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TEMP: --"
+            android:textColor="#f80"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <!-- Resolução -->
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Resolução" android:textColor="#fff" android:textSize="12sp"/>
+    <Spinner android:id="@+id/spinnerResolution"
+        android:layout_width="match_parent" android:layout_height="38dp"
+        android:background="#0f3460" android:layout_marginBottom="8dp"/>
+
+    <!-- Renderizador -->
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Renderizador" android:textColor="#fff" android:textSize="12sp"/>
+    <Spinner android:id="@+id/spinnerRenderer"
+        android:layout_width="match_parent" android:layout_height="38dp"
+        android:background="#0f3460" android:layout_marginBottom="8dp"/>
+
+    <!-- FOV -->
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="FOV" android:textColor="#fff" android:textSize="12sp"/>
+    <SeekBar android:id="@+id/seekFov"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:max="110" android:progress="70"
+        android:progressTint="#e94560" android:thumbTint="#e94560"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Render Distance -->
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Distância de Renderização" android:textColor="#fff" android:textSize="12sp"/>
+    <SeekBar android:id="@+id/seekRenderDist"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:max="24" android:progress="8"
+        android:progressTint="#e94560" android:thumbTint="#e94560"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Toggles -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Mostrar FPS" android:textColor="#fff" android:textSize="12sp"/>
+            <Switch android:id="@+id/switchShowFps" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:checked="true"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="VSync" android:textColor="#fff" android:textSize="12sp"/>
+            <Switch android:id="@+id/switchVsync" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:checked="false"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Partículas" android:textColor="#fff" android:textSize="12sp"/>
+            <Switch android:id="@+id/switchParticles" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:checked="true"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button android:id="@+id/btnApply"
+        android:layout_width="match_parent" android:layout_height="40dp"
+        android:layout_marginTop="8dp" android:text="Aplicar"
+        android:backgroundTint="#e94560" android:textColor="#fff"/>
+
+</LinearLayout>

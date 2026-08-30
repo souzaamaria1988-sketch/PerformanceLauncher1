@@ -1,7 +1,10 @@
 package net.kdt.pojavlaunch;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,11 +19,22 @@ public class LauncherModActivity extends AppCompatActivity {
         Spinner sp=findViewById(R.id.spinnerVersion);
         sp.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,VERSIONS));
 
-        findViewById(R.id.btnPlay).setOnClickListener(v->
-            Toast.makeText(this,"Iniciando "+sp.getSelectedItem(),Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btnPlay).setOnClickListener(v->{
+            startFloatingSettings();
+            Toast.makeText(this,"Iniciando "+sp.getSelectedItem(),Toast.LENGTH_SHORT).show();
+        });
 
-        // Fase 2: abre Mod Browser
         findViewById(R.id.btnMods).setOnClickListener(v->
             startActivity(new Intent(this, ModBrowserActivity.class)));
+    }
+
+    private void startFloatingSettings() {
+        if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(this)) {
+            Toast.makeText(this, "Permita sobreposição nas configurações", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + getPackageName())));
+            return;
+        }
+        startService(new Intent(this, FloatingSettingsService.class));
     }
 }

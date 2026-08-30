@@ -4,23 +4,23 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:label="PerformanceLauncher"
         android:theme="@style/Theme.MaterialComponents.NoActionBar">
 
-        <activity android:name=".LauncherModActivity"
-            android:exported="true">
+        <activity android:name=".LauncherModActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".ModBrowserActivity"
-            android:exported="false"/>
+        <activity android:name=".ModBrowserActivity" android:exported="false"/>
 
-        <service android:name=".FpsOverlayService"
-            android:exported="false"/>
+        <service android:name=".FloatingSettingsService" android:exported="false"/>
+        <service android:name=".FpsOverlayService" android:exported="false"/>
     </application>
 </manifest>
