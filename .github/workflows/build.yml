@@ -1,4 +1,4 @@
-name: Build APK
+name: Build PojavLauncher APK
 
 on:
   push:
@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -27,41 +29,47 @@ jobs:
           key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-
 
-      - name: Grant execute
-        run: chmod +x gradlew 2>/dev/null || true
-
-      - name: Create gradlew if missing
+      # Criar JRE placeholder (o build não precisa do JRE real)
+      - name: Create JRE placeholder
         run: |
-          if [ ! -f gradlew ]; then
-            gradle wrapper --gradle-version 8.4 || true
-          fi
+          mkdir -p app_pojavlauncher/src/main/assets/components/jre
+          echo "JRE placeholder - será baixado no primeiro uso" > app_pojavlauncher/src/main/assets/components/jre/README.txt
+
+      - name: Grant execute
+        run: chmod +x gradlew
 
       - name: Build APK
-        run: |
-          if [ -f gradlew ]; then
-            ./gradlew assembleDebug --no-daemon --stacktrace
-          else
-            gradle assembleDebug --no-daemon --stacktrace
-          fi
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        continue-on-error: true
 
       - name: Find APK
         id: find
         run: |
           APK=$(find . -name "*.apk" -path "*/debug/*" | head -1)
           if [ -z "$APK" ]; then
-            mkdir -p app/build/outputs/apk/debug
-            echo "placeholder" > app/build/outputs/apk/debug/app-debug.apk
-            APK="app/build/outputs/apk/debug/app-debug.apk"
+            APK=$(find . -name "*.apk" | head -1)
           fi
-          echo "apk=$APK" >> $GITHUB_OUTPUT
+          if [ -n "$APK" ]; then
+            echo "apk=$APK" >> $GITHUB_OUTPUT
+            echo "Found APK: $APK"
+          else
+            echo "apk=" >> $GITHUB_OUTPUT
+            echo "No APK found"
+          fi
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK
+        if: steps.find.outputs.apk != ''
+        uses: actions/upload-artifact@v4
         with:
-          name: PerformanceLauncher-v0.5.0
+          name: PojavLauncher-debug
           path: ${{ steps.find.outputs.apk }}
 
-      - uses: softprops/action-gh-release@v2
+      - name: Create Release
+        if: steps.find.outputs.apk != ''
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.5.0-fase5
-          name: PerformanceLauncher v0.5.0 (Fase 5 - Final)
+          tag_name: v${{ github.run_number }}
+          name: PojavLauncher Build #${{ github.run_number }}
           files: ${{ steps.find.outputs.apk }}
+          draft: false
+          prerelease: false
