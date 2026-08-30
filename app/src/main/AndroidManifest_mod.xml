@@ -6,10 +6,13 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:label="PerformanceLauncher"
-        android:theme="@style/Theme.MaterialComponents.NoActionBar">
+        android:theme="@style/Theme.MaterialComponents.NoActionBar"
+        android:usesCleartextTraffic="false">
 
         <activity android:name=".LauncherModActivity" android:exported="true">
             <intent-filter>
@@ -22,5 +25,6 @@
 
         <service android:name=".FloatingSettingsService" android:exported="false"/>
         <service android:name=".FpsOverlayService" android:exported="false"/>
+        <service android:name=".ModDownloadService" android:exported="false"/>
     </application>
 </manifest>

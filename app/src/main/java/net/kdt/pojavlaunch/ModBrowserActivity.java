@@ -1,6 +1,7 @@
 package net.kdt.pojavlaunch;
 
-import android.os.Bundle;
+import android.content.Intent;
+import android.os.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,25 +13,15 @@ public class ModBrowserActivity extends AppCompatActivity {
     private RecyclerView recycler;
     private ModAdapter adapter;
     private EditText editSearch;
-    private Button btnInstall;
-    private List<ModItem> allMods = new ArrayList<>();
-    private List<ModItem> selectedMods = new ArrayList<>();
+    private Button btnInstall, btnSearchApi;
+    private Spinner spinnerMcVersion;
+    private ProgressBar progressBar;
+    private List<ModrinthApi.ModResult> results = new ArrayList<>();
+    private Set<String> selectedIds = new HashSet<>();
+    private String currentType = "mod";
+    private Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    // Mods populares pré-carregados (Fase 3: buscar da API real)
-    private static final String[][] POPULAR_MODS = {
-        {"Sodium", "Otimização de renderização - até 3x mais FPS", "4.2M"},
-        {"Lithium", "Otimização de lógica do jogo e IA", "3.8M"},
-        {"Starlight", "Reescrita do sistema de iluminação", "2.1M"},
-        {"Entity Culling", "Não renderiza entidades invisíveis", "1.9M"},
-        {"FerriteCore", "Reduz uso de RAM em até 40%", "2.5M"},
-        {"ModernFix", "Corrige problemas de performance", "1.7M"},
-        {"Iris Shaders", "Suporte a shaders com Sodium", "3.2M"},
-        {"Indium", "Compatibilidade Fabric Rendering API", "1.4M"},
-        {"LazyDFU", "Inicialização mais rápida", "1.1M"},
-        {"Smooth Boot", "Carregamento suave na inicialização", "980K"},
-        {"Dynamic FPS", "Reduz FPS quando em segundo plano", "1.3M"},
-        {"Enhanced Block Entities", "Otimiza renderização de blocos", "1.6M"}
-    };
+    private static final String[] MC_VERSIONS = {"1.21.1","1.20.6","1.20.4","1.20.1","1.19.2","1.18.2","1.16.5","1.12.2"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,56 +31,109 @@ public class ModBrowserActivity extends AppCompatActivity {
         recycler = findViewById(R.id.recyclerMods);
         editSearch = findViewById(R.id.editSearch);
         btnInstall = findViewById(R.id.btnInstallSelected);
+        btnSearchApi = findViewById(R.id.btnSearchApi);
+        progressBar = findViewById(R.id.progressSearch);
+
+        spinnerMcVersion = findViewById(R.id.spinnerMcVersion);
+        spinnerMcVersion.setAdapter(new ArrayAdapter<>(this,
+            android.R.layout.simple_spinner_dropdown_item, MC_VERSIONS));
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
-
-        for (String[] m : POPULAR_MODS) {
-            allMods.add(new ModItem(m[0], m[1], m[2], false));
-        }
-
-        adapter = new ModAdapter(allMods, item -> {
-            updateInstallButton();
-        });
+        adapter = new ModAdapter(results, this::onModSelected);
         recycler.setAdapter(adapter);
 
-        editSearch.addTextChangedListener(new android.text.TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
-            public void onTextChanged(CharSequence s, int a, int b, int c) { filter(s.toString()); }
-            public void afterTextChanged(android.text.Editable s) {}
-        });
+        btnSearchApi.setOnClickListener(v -> searchOnline());
 
         btnInstall.setOnClickListener(v -> installSelected());
-        findViewById(R.id.btnFabric).setOnClickListener(v ->
-            Toast.makeText(this, "Filtrando: Fabric", Toast.LENGTH_SHORT).show());
-        findViewById(R.id.btnForge).setOnClickListener(v ->
-            Toast.makeText(this, "Filtrando: Forge", Toast.LENGTH_SHORT).show());
+
+        findViewById(R.id.btnFabric).setOnClickListener(v -> {
+            currentType = "mod";
+            searchOnline();
+        });
+
+        findViewById(R.id.btnForge).setOnClickListener(v -> {
+            currentType = "shader";
+            searchOnline();
+        });
+
+        // Buscar populares ao abrir
+        searchOnline();
     }
 
-    private void filter(String query) {
-        List<ModItem> filtered = new ArrayList<>();
-        for (ModItem m : allMods) {
-            if (m.name.toLowerCase().contains(query.toLowerCase())) {
-                filtered.add(m);
+    private void searchOnline() {
+        String query = editSearch.getText().toString().trim();
+        String mcVer = spinnerMcVersion.getSelectedItem().toString();
+
+        progressBar.setVisibility(android.view.View.VISIBLE);
+        btnSearchApi.setEnabled(false);
+
+        new Thread(() -> {
+            try {
+                List<ModrinthApi.ModResult> found;
+                if (query.isEmpty()) {
+                    found = ModrinthApi.search("optimization", currentType, mcVer);
+                } else {
+                    found = ModrinthApi.search(query, currentType, mcVer);
+                }
+
+                mainHandler.post(() -> {
+                    results.clear();
+                    results.addAll(found);
+                    adapter.notifyDataSetChanged();
+                    progressBar.setVisibility(android.view.View.GONE);
+                    btnSearchApi.setEnabled(true);
+                    Toast.makeText(this, found.size() + " resultados", Toast.LENGTH_SHORT).show();
+                });
+
+            } catch (Exception e) {
+                mainHandler.post(() -> {
+                    progressBar.setVisibility(android.view.View.GONE);
+                    btnSearchApi.setEnabled(true);
+                    Toast.makeText(this, "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
-        }
-        adapter.updateList(filtered);
+        }).start();
     }
 
-    private void updateInstallButton() {
-        selectedMods.clear();
-        for (ModItem m : allMods) {
-            if (m.selected) selectedMods.add(m);
-        }
-        btnInstall.setText("Instalar Selecionados (" + selectedMods.size() + ")");
-        btnInstall.setEnabled(!selectedMods.isEmpty());
+    private void onModSelected(ModrinthApi.ModResult mod, boolean selected) {
+        if (selected) selectedIds.add(mod.id);
+        else selectedIds.remove(mod.id);
+        btnInstall.setText("Instalar (" + selectedIds.size() + ")");
+        btnInstall.setEnabled(!selectedIds.isEmpty());
     }
 
     private void installSelected() {
-        StringBuilder sb = new StringBuilder("Instalando: ");
-        for (ModItem m : selectedMods) {
-            sb.append(m.name).append(", ");
-        }
-        Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
-        // TODO Fase 3: download real dos .jar
+        String mcVer = spinnerMcVersion.getSelectedItem().toString();
+        btnInstall.setEnabled(false);
+        btnInstall.setText("Instalando...");
+
+        new Thread(() -> {
+            int installed = 0;
+            for (String id : selectedIds) {
+                try {
+                    List<ModrinthApi.VersionFile> files = ModrinthApi.getFiles(id, mcVer);
+                    for (ModrinthApi.VersionFile f : files) {
+                        Intent dl = new Intent(this, ModDownloadService.class);
+                        dl.putExtra(ModDownloadService.EXTRA_URL, f.url);
+                        dl.putExtra(ModDownloadService.EXTRA_FILENAME, f.filename);
+                        dl.putExtra(ModDownloadService.EXTRA_TYPE, currentType);
+                        startService(dl);
+                        installed++;
+                        Thread.sleep(500);
+                    }
+                } catch (Exception e) {
+                    mainHandler.post(() ->
+                        Toast.makeText(this, "Erro em " + id + ": " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show());
+                }
+            }
+            final int count = installed;
+            mainHandler.post(() -> {
+                btnInstall.setText("Instalar (" + selectedIds.size() + ")");
+                btnInstall.setEnabled(true);
+                selectedIds.clear();
+                Toast.makeText(this, count + " arquivo(s) baixando...", Toast.LENGTH_SHORT).show();
+            });
+        }).start();
     }
 }

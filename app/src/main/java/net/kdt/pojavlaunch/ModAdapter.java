@@ -7,19 +7,14 @@ import java.util.List;
 
 public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ModViewHolder> {
 
-    public interface OnCheckListener { void onChecked(ModItem item); }
+    public interface OnCheckListener { void onChecked(ModrinthApi.ModResult mod, boolean selected); }
 
-    private List<ModItem> mods;
+    private List<ModrinthApi.ModResult> mods;
     private OnCheckListener listener;
 
-    public ModAdapter(List<ModItem> mods, OnCheckListener listener) {
+    public ModAdapter(List<ModrinthApi.ModResult> mods, OnCheckListener listener) {
         this.mods = mods;
         this.listener = listener;
-    }
-
-    public void updateList(List<ModItem> newList) {
-        this.mods = newList;
-        notifyDataSetChanged();
     }
 
     @Override
@@ -31,14 +26,14 @@ public class ModAdapter extends RecyclerView.Adapter<ModAdapter.ModViewHolder> {
 
     @Override
     public void onBindViewHolder(ModViewHolder holder, int position) {
-        ModItem item = mods.get(position);
-        holder.name.setText(item.name);
+        ModrinthApi.ModResult item = mods.get(position);
+        holder.name.setText(item.title);
         holder.desc.setText(item.description);
         holder.downloads.setText(item.downloads);
-        holder.check.setChecked(item.selected);
+        holder.check.setOnCheckedChangeListener(null);
+        holder.check.setChecked(false);
         holder.check.setOnCheckedChangeListener((btn, checked) -> {
-            item.selected = checked;
-            if (listener != null) listener.onChecked(item);
+            if (listener != null) listener.onChecked(item, checked);
         });
     }
 
