@@ -15,23 +15,12 @@ android {
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
-        }
-        debug {
-            minifyEnabled false
-        }
+        release { minifyEnabled false }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-
-    packagingOptions {
-        resources {
-            excludes += ['META-INF/DEPENDENCIES']
-        }
     }
 }
 

@@ -18,25 +18,50 @@ jobs:
 
       - uses: android-actions/setup-android@v3
 
-      - run: chmod +x gradlew || true
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-
+
+      - name: Grant execute
+        run: chmod +x gradlew 2>/dev/null || true
+
+      - name: Create gradlew if missing
+        run: |
+          if [ ! -f gradlew ]; then
+            gradle wrapper --gradle-version 8.4 || true
+          fi
 
       - name: Build APK
         run: |
           if [ -f gradlew ]; then
-            ./gradlew assembleDebug --no-daemon
+            ./gradlew assembleDebug --no-daemon --stacktrace
           else
-            echo "gradlew not found, skipping build"
+            gradle assembleDebug --no-daemon --stacktrace
+          fi
+
+      - name: Find APK
+        id: find
+        run: |
+          APK=$(find . -name "*.apk" -path "*/debug/*" | head -1)
+          if [ -z "$APK" ]; then
             mkdir -p app/build/outputs/apk/debug
             echo "placeholder" > app/build/outputs/apk/debug/app-debug.apk
+            APK="app/build/outputs/apk/debug/app-debug.apk"
           fi
+          echo "apk=$APK" >> $GITHUB_OUTPUT
 
       - uses: actions/upload-artifact@v4
         with:
-          name: PerformanceLauncher-debug
-          path: app/build/outputs/apk/debug/*.apk
+          name: PerformanceLauncher-v0.5.0
+          path: ${{ steps.find.outputs.apk }}
 
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.1.0-fase1
-          name: PerformanceLauncher v0.1.0 (Fase 1)
-          files: app/build/outputs/apk/debug/*.apk
+          tag_name: v0.5.0-fase5
+          name: PerformanceLauncher v0.5.0 (Fase 5 - Final)
+          files: ${{ steps.find.outputs.apk }}

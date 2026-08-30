@@ -1,151 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1a1a2e"
-    android:padding="16dp">
+    android:background="#1a1a2e">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="24dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PerformanceLauncher"
-            android:textSize="22sp"
-            android:textColor="#e94560"
-            android:textStyle="bold"/>
-
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@android:drawable/ic_menu_preferences"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Config"/>
-    </LinearLayout>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="#16213e"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Versão do Minecraft"
-                android:textColor="#e94560"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
-
-            <Spinner
-                android:id="@+id/spinnerVersion"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:background="#0f3460"
-                android:popupBackground="#16213e"/>
-
-            <Button
-                android:id="@+id/btnDownload"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="12dp"
-                android:text="Baixar Versão"
-                android:backgroundTint="#e94560"
-                android:textColor="#fff"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="#16213e"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mods e Otimização"
-                android:textColor="#e94560"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
-
-            <Button
-                android:id="@+id/btnMods"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="8dp"
-                android:text="Instalar Mods (Fabric)"
-                android:backgroundTint="#0f3460"
-                android:textColor="#fff"/>
-
-            <Button
-                android:id="@+id/btnShaders"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="8dp"
-                android:text="Shaders"
-                android:backgroundTint="#0f3460"
-                android:textColor="#fff"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/btnPlay"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:text="▶ JOGAR"
-        android:textSize="18sp"
-        android:backgroundTint="#e94560"
-        android:textColor="#fff"
-        android:textStyle="bold"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Mostrar FPS"
-            android:textColor="#fff"
-            android:textSize="14sp"/>
-
-        <Switch
-            android:id="@+id/switchFps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"/>
-    </LinearLayout>
+            android:text="PerformanceLauncher"
+            android:textSize="24sp"
+            android:textColor="#e94560"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minecraft Java no Android"
+            android:textSize="12sp"
+            android:textColor="#666"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Versão -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="#16213e"
+            app:cardCornerRadius="12dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Versão do Minecraft" android:textColor="#e94560"
+                    android:textStyle="bold" android:textSize="13sp"/>
+                <Spinner android:id="@+id/spinnerVersion"
+                    android:layout_width="match_parent" android:layout_height="44dp"
+                    android:layout_marginTop="8dp" android:background="#0f3460"/>
+                <Button android:id="@+id/btnDownload"
+                    android:layout_width="match_parent" android:layout_height="40dp"
+                    android:layout_marginTop="8dp" android:text="Baixar Versão"
+                    android:backgroundTint="#e94560" android:textColor="#fff" android:textSize="12sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Preset de Performance -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="#16213e"
+            app:cardCornerRadius="12dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="⚡ Preset de Performance" android:textColor="#e94560"
+                    android:textStyle="bold" android:textSize="13sp"/>
+                <Spinner android:id="@+id/spinnerPreset"
+                    android:layout_width="match_parent" android:layout_height="44dp"
+                    android:layout_marginTop="8dp" android:background="#0f3460"/>
+                <TextView android:id="@+id/textConfigInfo"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" android:textColor="#999"
+                    android:textSize="11sp" android:text=""/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Mods -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="#16213e"
+            app:cardCornerRadius="12dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="📦 Conteúdo" android:textColor="#e94560"
+                    android:textStyle="bold" android:textSize="13sp"/>
+                <Button android:id="@+id/btnMods"
+                    android:layout_width="match_parent" android:layout_height="40dp"
+                    android:layout_marginTop="8dp" android:text="Mods / Shaders / Packs"
+                    android:backgroundTint="#0f3460" android:textColor="#fff" android:textSize="12sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Jogar -->
+        <Button android:id="@+id/btnPlay"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:text="▶ JOGAR"
+            android:textSize="18sp"
+            android:backgroundTint="#e94560"
+            android:textColor="#fff"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</ScrollView>
