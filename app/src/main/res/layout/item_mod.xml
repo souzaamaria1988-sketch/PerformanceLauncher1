@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#16213e"
+    android:padding="12dp"
+    android:layout_marginBottom="6dp"
+    android:gravity="center_vertical">
+
+    <CheckBox
+        android:id="@+id/checkMod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="#e94560"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/textModName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome do Mod"
+            android:textColor="#fff"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textModDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descrição"
+            android:textColor="#999"
+            android:textSize="11sp"
+            android:maxLines="2"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textModDownloads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1.2M"
+        android:textColor="#e94560"
+        android:textSize="11sp"/>
+
+</LinearLayout>
